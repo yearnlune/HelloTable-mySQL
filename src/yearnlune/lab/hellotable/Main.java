@@ -25,9 +25,23 @@ public class Main {
                 ") ENGINE = InnoDB\n" +
                 "  CHARACTER SET 'utf8';";
 
-        Generator generator = new Generator();
+        HelloTable helloTable = new HelloTable(sql);
+        helloTable.makeIndex(new Index[]
+                {
+                        new Index.Builder()
+                                .name("ix_mt_log_created_at")
+                                .column("created_at")
+                                .build(),
+                        new Index.Builder()
+                                .name("fk_mt_log_ot_acnt_zid")
+                                .constraint(Index.Constraint.FOREIGN_KEY)
+                                .column("zid")
+                                .targetTable("ot_acnt")
+                                .targetColumn("zid")
+                                .build()
+                }
+        );
+        System.out.println(helloTable);
 
-
-        System.out.println(generator.generateComment(sql));
     }
 }
