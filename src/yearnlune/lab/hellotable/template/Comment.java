@@ -1,6 +1,6 @@
 package yearnlune.lab.hellotable.template;
 
-import yearnlune.lab.hellotable.Column;
+import yearnlune.lab.hellotable.parse.Column;
 
 /**
  * Project : HelloTable-mySQL

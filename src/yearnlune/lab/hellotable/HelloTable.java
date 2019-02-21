@@ -1,5 +1,6 @@
 package yearnlune.lab.hellotable;
 
+import yearnlune.lab.hellotable.parse.Column;
 import yearnlune.lab.hellotable.template.Comment;
 import yearnlune.lab.hellotable.template.Index;
 
@@ -74,7 +75,7 @@ public class HelloTable {
     }
 
     private void makeColumnComment() {
-        sb.append("-- Column Comment");
+        sb.append("-- Column Comment\n");
         for (int i = 0; i < columnHashMap.size(); i++) {
             sb.append(new Comment.Builder()
                     .tableName(tableName)
@@ -97,8 +98,29 @@ public class HelloTable {
         }
     }
 
+    public void makeChecker() {
+        sb.append("\n-- Check\n" +
+                "SELECT DISTINCT TABLE_NAME\n" +
+                "              , COLUMN_NAME\n" +
+                "              , INDEX_NAME\n" +
+                "              , CASE WHEN NON_UNIQUE = 0 THEN 'TRUE' ELSE 'FALSE' END AS IsUnique\n" +
+                "FROM information_schema.STATISTICS\n" +
+                "WHERE TABLE_NAME = '"+ tableName + "'\n" +
+                ";\n" +
+                "\n" +
+                "-- Check\n" +
+                "-- SELECT *\n" +
+                "-- FROM "+ tableName + "\n" +
+                "-- WHERE 1 = 1\n" +
+                "-- ;");
+    }
+
     private String refineTab(String str) {
         return str.replaceAll(" {2,}", " ");
+    }
+
+    public void print() {
+        System.out.println(sb.toString());
     }
 
     @Override
