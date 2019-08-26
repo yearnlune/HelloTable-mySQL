@@ -28,7 +28,7 @@ public class Comment {
         sb.append(" ");
         sb.append(column.getName());
         sb.append(" ");
-        sb.append(column.getDef());
+        sb.append(column.getDef().replaceAll(" primary key", ""));
         sb.append(" COMMENT '';");
         sb.append("\n");
         return sb.toString();

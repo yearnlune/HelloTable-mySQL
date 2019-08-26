@@ -40,7 +40,7 @@ public class HelloTable {
     private boolean checkCreateStatement(String sql) {
         boolean chk = false;
 
-        String regex = "^\\s*create\\s*table\\s*((?:\\w+)|(?:`\\w+`))\\s*\\(.*?\\n\\s*\\).*?;";
+        String regex = "^\\s*create\\s*table\\s*(?:if not exists)\\s*((?:\\w+)|(?:`\\w+`))\\s*\\(.*?\\n\\s*\\).*?;";
         Pattern pattern = Pattern.compile(regex, Pattern.UNICODE_CASE | Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(sql);
 

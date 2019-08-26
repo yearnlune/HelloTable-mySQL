@@ -67,7 +67,7 @@ public class Index {
         sb.append("ALTER TABLE ");
         sb.append(tableName);
         sb.append(" ADD ");
-        sb.append(constraint);
+        sb.append(constraint.getValue());
         sb.append(" ");
         sb.append(name);
         sb.append(" (");

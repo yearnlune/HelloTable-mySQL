@@ -11,37 +11,38 @@ import yearnlune.lab.hellotable.template.Index;
  */
 public class Main {
 
-    private static final String sql = "CREATE TABLE mt_log\n" +
-            "(\n" +
-            "  seq        INTEGER(11) AUTO_INCREMENT,\n" +
-            "  zid        VARCHAR(40),\n" +
-            "  created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-            "  ip         VARCHAR(64) NOT NULL,\n" +
-            "  user_agent VARCHAR(64),\n" +
-            "  operation  CHAR(8)     NOT NULL,\n" +
-            "  referer    VARCHAR(256),\n" +
-            "  content    TEXT,\n" +
-            "  PRIMARY KEY pk_mt_log (seq)\n" +
-            ") ENGINE = InnoDB\n" +
-            "  CHARACTER SET 'utf8';";
+    private static final String sql = "CREATE TABLE IF NOT EXISTS ot_preg (\n" +
+            "    id char(36) primary key,\n" +
+            "    company_id char(36) not null,\n" +
+            "    user_id char(36) not null,\n" +
+            "    group_id char(36) not null,\n" +
+            "    created_at timestamp default current_timestamp not null\n" +
+            ");";
 
     public static void main(String[] args) {
 
         HelloTable helloTable = new HelloTable(sql);
-
         helloTable.makeIndex(
                 new Index[]{
                         new Index.Builder()
-                                .name("ix_mt_log_created_at")
-                                .column("created_at")
+                                .name("fk_ot_preg_ot_solu_user")
+                                .constraint(Index.Constraint.FOREIGN_KEY)
+                                .column("user_id")
+                                .targetTable("ot_solu_user")
+                                .targetColumn("id")
                                 .build(),
                         new Index.Builder()
-                                .name("fk_mt_log_ot_acnt_zid")
+                                .name("fk_ot_preg_ot_grp")
                                 .constraint(Index.Constraint.FOREIGN_KEY)
-                                .column("zid")
-                                .targetTable("ot_acnt")
-                                .targetColumn("zid")
-                                .build()
+                                .column("group_id")
+                                .targetTable("ot_grp")
+                                .targetColumn("id")
+                                .build(),
+                        new Index.Builder()
+                                .name("fk_ot_preg_created_at")
+                                .constraint(Index.Constraint.INDEX)
+                                .column("created_at")
+                                .build(),
                 }
         );
         helloTable.makeChecker();
