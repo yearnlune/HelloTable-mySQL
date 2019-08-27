@@ -39,7 +39,7 @@ public class Index {
     }
 
     private Index(Builder builder) {
-        name = builder.name != null ? builder.name : setDefaultName(builder);
+        name = builder.name;
         column = builder.column;
         constraint = builder.constraint;
         isUnique = builder.isUnique;
@@ -49,31 +49,25 @@ public class Index {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
-        this.name = this.name.replaceAll("\\{TABLE_NAME\\}", tableName);
+        if (this.name == null) {
+            setDefaultName();
+        }
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    private String setDefaultName(Builder builder) {
+    private void setDefaultName() {
         HashMap<String, String> abbreviation = setNamingConvention();
         StringBuilder sb = new StringBuilder();
-        sb.append(abbreviation.get(builder.constraint.getValue()));
+        sb.append(abbreviation.get(constraint.getValue()));
         sb.append("_");
-        sb.append("{TABLE_NAME}");
+        sb.append(tableName);
         sb.append("_");
-        if (builder.constraint.getValue().equals(Constraint.FOREIGN_KEY.getValue())) {
-            sb.append(builder.targetTable);
+        if (constraint.getValue().equals(Constraint.FOREIGN_KEY.getValue())) {
+            sb.append(targetTable);
         } else {
-            sb.append(builder.column[0]);
+            sb.append(column[0]);
         }
 
-        return sb.toString();
+       this.name = sb.toString();
     }
 
     private HashMap<String, String> setNamingConvention() {
