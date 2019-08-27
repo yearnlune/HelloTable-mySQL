@@ -49,6 +49,11 @@ public class Index {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+        this.name = this.name.replaceAll("\\{TABLE_NAME\\}", tableName);
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
@@ -65,7 +70,7 @@ public class Index {
         if (builder.constraint.getValue().equals(Constraint.FOREIGN_KEY.getValue())) {
             sb.append(builder.targetTable);
         } else {
-            sb.append(refineColumnString());
+            sb.append(builder.column[0]);
         }
 
         return sb.toString();
