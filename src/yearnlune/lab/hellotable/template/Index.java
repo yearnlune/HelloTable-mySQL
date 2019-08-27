@@ -1,5 +1,7 @@
 package yearnlune.lab.hellotable.template;
 
+import java.util.HashMap;
+
 /**
  * Project : HelloTable-mySQL
  * Created by IntelliJ IDEA
@@ -37,7 +39,7 @@ public class Index {
     }
 
     private Index(Builder builder) {
-        name = builder.name;
+        name = builder.name != null ? builder.name : setDefaultName(builder);
         column = builder.column;
         constraint = builder.constraint;
         isUnique = builder.isUnique;
@@ -47,6 +49,35 @@ public class Index {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    private String setDefaultName(Builder builder) {
+        HashMap<String, String> abbreviation = setNamingConvention();
+        StringBuilder sb = new StringBuilder();
+        sb.append(abbreviation.get(builder.constraint.getValue()));
+        sb.append("_");
+        sb.append("{TABLE_NAME}");
+        sb.append("_");
+        if (builder.constraint.getValue().equals(Constraint.FOREIGN_KEY.getValue())) {
+            sb.append(builder.targetTable);
+        } else {
+            sb.append(refineColumnString());
+        }
+
+        return sb.toString();
+    }
+
+    private HashMap<String, String> setNamingConvention() {
+        HashMap<String, String> abbreviation = new HashMap<>();
+        abbreviation.put(Constraint.PRIMARY_KEY.getValue(), "pk");
+        abbreviation.put(Constraint.FOREIGN_KEY.getValue(), "fk");
+        abbreviation.put(Constraint.INDEX.getValue(), "ix");
+
+        return abbreviation;
     }
 
     private String refineColumnString() {
@@ -84,14 +115,17 @@ public class Index {
         return sb.toString();
     }
 
-    public static class Builder {
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
         private String name;
         private String[] column;
         private Constraint constraint = Constraint.INDEX;
         private boolean isUnique = false;
         private String targetTable;
         private String targetColumn;
-
 
         public Builder() {
         }
