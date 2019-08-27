@@ -11,11 +11,11 @@ import yearnlune.lab.hellotable.template.Index;
  */
 public class Main {
 
-    private static final String sql = "CREATE TABLE IF NOT EXISTS ot_preg (\n" +
+    private static final String sql = "CREATE TABLE IF NOT EXISTS ot_agnt (\n" +
             "    id char(36) primary key,\n" +
             "    company_id char(36) not null,\n" +
-            "    user_id char(36) not null,\n" +
-            "    group_id char(36) not null,\n" +
+            "    device_id char(36) not null,\n" +
+            "    activation boolean default false not null,\n" +
             "    created_at timestamp default current_timestamp not null\n" +
             ");";
 
@@ -24,24 +24,19 @@ public class Main {
         HelloTable helloTable = new HelloTable(sql);
         helloTable.makeIndex(
                 new Index[]{
-                        new Index.Builder()
-                                .name("fk_ot_preg_ot_solu_user")
+                        Index.builder()
                                 .constraint(Index.Constraint.FOREIGN_KEY)
-                                .column("user_id")
-                                .targetTable("ot_solu_user")
+                                .column("device_id")
+                                .targetTable("ot_dvic")
                                 .targetColumn("id")
                                 .build(),
-                        new Index.Builder()
-                                .name("fk_ot_preg_ot_grp")
-                                .constraint(Index.Constraint.FOREIGN_KEY)
-                                .column("group_id")
-                                .targetTable("ot_grp")
-                                .targetColumn("id")
-                                .build(),
-                        new Index.Builder()
-                                .name("fk_ot_preg_created_at")
+                        Index.builder()
                                 .constraint(Index.Constraint.INDEX)
                                 .column("created_at")
+                                .build(),
+                        Index.builder()
+                                .constraint(Index.Constraint.INDEX)
+                                .column("company_id")
                                 .build(),
                 }
         );
