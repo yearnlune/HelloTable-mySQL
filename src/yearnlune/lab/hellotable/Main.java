@@ -11,13 +11,13 @@ import yearnlune.lab.hellotable.template.Index;
  */
 public class Main {
 
-    private static final String sql = "CREATE TABLE IF NOT EXISTS ot_agnt (\n" +
-            "    id char(36) primary key,\n" +
-            "    company_id char(36) not null,\n" +
-            "    device_id char(36) not null,\n" +
-            "    activation boolean default false not null,\n" +
-            "    created_at timestamp default current_timestamp not null\n" +
-            ");";
+    private static final String sql =
+            "CREATE TABLE IF NOT EXISTS ot_cach (\n" +
+                    "    zmid char(36) not null,\n" +
+                    "    latest_time timestamp default current_timestamp not null ON UPDATE current_timestamp,\n" +
+                    "    category varchar(64) not null,\n" +
+                    "    data mediumtext\n" +
+                    ");";
 
     public static void main(String[] args) {
 
@@ -25,10 +25,14 @@ public class Main {
         helloTable.makeIndex(
                 new Index[]{
                         Index.builder()
+                                .constraint(Index.Constraint.PRIMARY_KEY)
+                                .column(new String[]{"zmid", "category"})
+                                .build(),
+                        Index.builder()
                                 .constraint(Index.Constraint.FOREIGN_KEY)
-                                .column("device_id")
-                                .targetTable("ot_dvic")
-                                .targetColumn("id")
+                                .column("zmid")
+                                .targetTable("ot_agnt")
+                                .targetColumn("zmid")
                                 .build(),
                         Index.builder()
                                 .constraint(Index.Constraint.INDEX)

@@ -64,7 +64,10 @@ public class Index {
         if (constraint.getValue().equals(Constraint.FOREIGN_KEY.getValue())) {
             sb.append(targetTable);
         } else {
-            sb.append(column[0]);
+            for (int i = 0; i < column.length; ++i) {
+                if (i != 0) sb.append("_");
+                sb.append(column[i]);
+            }
         }
 
        this.name = sb.toString();
@@ -87,6 +90,7 @@ public class Index {
                 sb.append(", ");
             }
             sb.append(col);
+            isFirst = false;
         }
         return sb.toString();
     }
